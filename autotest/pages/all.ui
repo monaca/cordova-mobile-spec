@@ -1,0 +1,55 @@
+{
+    "top" : {
+        "container" : "toolbar",
+        "id": "header",
+        "style" : {
+            "title" : "UI Demo"
+        },
+        "left": [
+            {
+                "component": "button",
+                "style": {
+                  "text": "Button A"
+                }
+            }
+        ],
+        "right": [
+            {
+                "component": "button",
+                "style": {
+                  "text": "Button B"
+                }
+            }
+        ]
+    },
+    "bottom": {
+        "container" : "toolbar",
+        "style" : {
+            "backgroundColor" : "#334466",
+            "iosBarStyle" : "UIBarStyleBlackTranslucent"
+        },
+        "left": [
+            {
+                "component": "button",
+                "style": {
+                        "text": "Button 1",
+                        "backgroundColor" : "#999999"
+                }
+            },
+            {
+                "component": "button",
+                "style": {
+                        "text": "Button 2"
+                }
+            }
+        ],
+        "right": [
+            {
+                "component": "button",
+                "style": {
+                        "text": "Button 3"
+                }
+            }
+        ]
+    }
+}
