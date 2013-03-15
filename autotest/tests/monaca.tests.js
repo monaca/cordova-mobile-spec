@@ -8,6 +8,7 @@ describe("Monaca", function() {
 
   describe("retrieveUIStyle", function() {
 
+<<<<<<< HEAD
     function createRetrieveUIStyleTest(id, styles) {
       styles.forEach(function(object) {
         var key = object.key;
@@ -270,5 +271,4 @@ describe("Monaca", function() {
     });
 
   });
-
 });
