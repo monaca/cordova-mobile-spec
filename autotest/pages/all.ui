@@ -59,17 +59,17 @@
           {
               "component": "tabbarItem",
               "id": "tabbar-item1",
+              "link": "all.html?p=1",
               "style": {
-                "text": "Item1",
-                "link": "all.html?p=1"
+                "text": "Item1"               
               }
           },
           {
               "component": "tabbarItem",
               "id": "tabbar-item2",
+              "link": "all.html?p=2",
               "style": {
-                "text": "Item2",
-                "link": "all.html?p=2"
+                "text": "Item2"             
               }
           }
 
