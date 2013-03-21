@@ -1,0 +1,71 @@
+{
+    "top" : {
+        "container" : "toolbar",
+        "id": "header",
+        "style" : {
+          "title" : "Title",
+          "subtitle": "Subtitle"
+        },
+        "left": [
+            {
+                "component": "button",
+                "id": "top-left-button",
+                "style": {
+                  "text": "Button A"
+                },
+                "event": {
+                  "onTap": "AppEventEmitter.trigger('top-left-button.onTap');"
+                }
+            }
+        ],
+        "right": [
+            {
+                "component": "segment",
+                "id": "top-right-segment",
+                "style": {
+                  "texts": ["SegA", "SegB", "SegC"]
+                },
+                "event": {
+                  "onChange": "AppEventEmitter.trigger('top-right-segment:onChange');"
+                }
+            },
+            {
+                "component": "searchBox",
+                "id": "top-right-searchbox",
+                "style": {
+                  "placeholder": "Search"
+                },
+                "event": {
+                  "onSearch": "AppEventEmitter.trigger('top-right-searchbox:onSearch');"
+                }
+            }
+
+        ]
+    },
+    "bottom": {
+        "container" : "tabbar",
+        "style" : {
+            "backgroundColor" : "#334466"
+        },
+        "id": "footer",
+        "items": [
+          {
+              "component": "tabbarItem",
+              "id": "tabbar-item1",
+              "link": "index.html",
+              "style": {
+                "text": "Item1"
+              }
+          },
+          {
+              "component": "tabbarItem",
+              "id": "tabbar-item2",
+              "link": "index.html",
+              "style": {
+                "text": "Item2"
+              }
+          }
+
+        ]
+    }
+}
