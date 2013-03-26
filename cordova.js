@@ -6605,7 +6605,32 @@ window.monaca = window.monaca || {};
                 [id, style]
             );
         };
-    }   
+    }
+
+    /**
+     * Spinner handling
+     */
+    monaca.showSpinner = function (options) {
+        options = options || {};
+        var src = options.src ? options.src : null;
+        var frames = options.frame ? options.frame : null;
+        var interval = options.interval ? options.interval : null;
+        var backgroundColor = options.backgroundColor ? options.backgroundColor : null;
+        var backgroundOpacity = options.backgroundOpacity ? options.backgroundOpacity : null;
+        var title = options.title ? options.title : null;
+        var titleColor = options.titleColor ? options.titleColor : null;
+        var titleFontScale = options.titleFontScale ? options.titleFontScale : null;
+        monaca.apiQueue.exec(null, null, "mobi.monaca.nativecomponent", 'showSpinner', [ src, frames, interval, backgroundColor, backgroundOpacity, title, titleColor, titleFontScale, null ]);
+    };
+
+    monaca.hideSpinner = function(){
+        monaca.apiQueue.exec(null, null, "mobi.monaca.nativecomponent", 'hideSpinner', []);
+    };
+
+    monaca.updateSpinnerTitle = function(newTitle){
+        if (!newTitle) newTitle = "";
+        monaca.apiQueue.exec(null, null, "mobi.monaca.nativecomponent", 'updateSpinnerTitle', [ newTitle ]);
+    };
 
     var transitionPluginName = "Transit";
     
@@ -6655,6 +6680,7 @@ window.monaca = window.monaca || {};
         clearAll = clearAll || false;
         monaca.apiQueue.exec(null, null, transitionPluginName, "clearPageStack", [clearAll]);
     };
+
 
     /**
      * Console API from independent PhoneGap.
@@ -6720,32 +6746,6 @@ window.monaca = window.monaca || {};
         }
     };
 
-    /**
-     * Push Notification
-     */
-    monaca.pushCallback = null;
-    monaca.sendPush = function(data) {
-        console.log("Receive push");
-        console.log(JSON.stringify(data));
-        if (typeof monaca.pushCallback === "function") {
-            monaca.pushCallback(data);
-        }
-        document.addEventListener("DOMContentLoaded", function() {
-            if (typeof monaca.pushCallback === "function") {
-                monaca.pushCallback(data);
-            } else {
-                console.warn("Invalid push callback is specified.");
-            }
-        });
-    };
-    monaca.setPushHandler = function(fn) {
-        if (typeof fn !== "function") {
-            console.warn("Push callback must be a function");
-        } else {
-            monaca.pushCallback = fn;
-        }
-    };
-    
     // Set monaca.baseUrl
     if (typeof location.href !== "string") {
         console.warn("Cannot find base url");
@@ -6755,6 +6755,42 @@ window.monaca = window.monaca || {};
     }
 })();
 
+/**
+ * Monaca Cloud Functions
+ *  Version 1.5.0
+ *
+ * @author Masahiro TANAKA <info@monaca.mobi>
+ * @date   2013/03/17
+ */
+window.monaca = window.monaca || {};
+window.monaca.cloud = window.monaca.cloud || {};
+
+(function() {
+    /**
+     * Push Notification
+     */
+    monaca.cloud.Push = {};
+    monaca.cloud.Push.callback = null;
+    monaca.cloud.Push.send = function(data) {
+        if (typeof monaca.cloud.Push.callback === "function") {
+            monaca.cloud.Push.callback(data);
+        }
+        document.addEventListener("DOMContentLoaded", function() {
+            if (typeof monaca.cloud.Push.callback === "function") {
+                monaca.cloud.Push.callback(data);
+            } else {
+                console.warn("Invalid push callback is specified.");
+            }
+        });
+    };
+    monaca.cloud.Push.setHandler = function(fn) {
+        if (typeof fn !== "function") {
+            console.warn("Push callback must be a function");
+        } else {
+            monaca.cloud.Push.callback = fn;
+        }
+    };
+})();
 /* 
  *  monaca.viewport.js
  *
@@ -7008,52 +7044,52 @@ if (!window.plugins.childBrowser) {
  * Reused and ported to Android plugin by Daniel van 't Oever
  */
 if (typeof cordova !== "undefined") {
-	/**
-	 * Constructor
-	 */
-	function DatePicker() {
-		this._callback;
-	}
+    /**
+     * Constructor
+     */
+    function DatePicker() {
+        this._callback;
+    }
 
-	/**
-	 * show - true to show the ad, false to hide the ad
-	 */
-	DatePicker.prototype.show = function(options, cb) {
-		if (options.date) {
-			options.date = (options.date.getMonth() + 1) + "/" + (options.date.getDate()) + "/" + (options.date.getFullYear()) + "/"
-					+ (options.date.getHours()) + "/" + (options.date.getMinutes());
-		}
-		var defaults = {
-			mode : '',
-			date : '',
-			allowOldDates : true
-		};
+    /**
+     * show - true to show the ad, false to hide the ad
+     */
+    DatePicker.prototype.show = function(options, cb) {
+        if (options.date) {
+            options.date = (options.date.getMonth() + 1) + "/" + (options.date.getDate()) + "/" + (options.date.getFullYear()) + "/"
+                    + (options.date.getHours()) + "/" + (options.date.getMinutes());
+        }
+        var defaults = {
+            mode : '',
+            date : '',
+            allowOldDates : true
+        };
 
-		for ( var key in defaults) {
-			if (typeof options[key] !== "undefined")
-				defaults[key] = options[key];
-		}
-		this._callback = cb;
+        for ( var key in defaults) {
+            if (typeof options[key] !== "undefined")
+                defaults[key] = options[key];
+        }
+        this._callback = cb;
 
-		return cordova.exec(cb, failureCallback, 'DatePickerPlugin', defaults.mode, new Array(defaults));
-	};
+        return cordova.exec(cb, failureCallback, 'DatePickerPlugin', defaults.mode, new Array(defaults));
+    };
 
-	DatePicker.prototype._dateSelected = function(date) {
-		var d = new Date(parseFloat(date) * 1000);
-		if (this._callback)
-			this._callback(d);
-	};
+    DatePicker.prototype._dateSelected = function(date) {
+        var d = new Date(parseFloat(date) * 1000);
+        if (this._callback)
+            this._callback(d);
+    };
 
-	function failureCallback(err) {
-		console.log("datePickerPlugin.js failed: " + err);
-	}
+    function failureCallback(err) {
+        console.log("datePickerPlugin.js failed: " + err);
+    }
 
-	cordova.addConstructor(function() {
-		if (!window.plugins) {
-			window.plugins = {};
-		}
-		window.plugins.datePicker = new DatePicker();
-	});
+    cordova.addConstructor(function() {
+        if (!window.plugins) {
+            window.plugins = {};
+        }
+        window.plugins.datePicker = new DatePicker();
+    });
 };
 /*
    Copyright 2012 Wolfgang Koller - http://www.gofg.at/
@@ -7072,93 +7108,93 @@ if (typeof cordova !== "undefined") {
 */
 
 cordova.define("cordova/plugin/bluetooth", function(require, exports, module) {
-	var exec = require('cordova/exec');
-	
-	var Bluetooth = function() {};
-	
-	/**
-	 * Check if bluetooth API is supported on this platform
-	 * @returns true if bluetooth API is supported, false otherwise
-	 */
-	Bluetooth.prototype.isSupported = function() {
-		// Currently only supported on android
-		if( device.platform.toLowerCase() == "android" ) return true;
-		
-		return false;
-	}
-	
-	/**
-	 * Enable bluetooth
-	 * 
-	 * @param successCallback function to be called when enabling of bluetooth was successfull
-	 * @param errorCallback function to be called when enabling was not possible / did fail
-	 */
-	Bluetooth.prototype.enable = function(successCallback,failureCallback) {
-	    return exec(successCallback, failureCallback, 'BluetoothPlugin', 'enable', []);
-	}
-	
-	/**
-	 * Disable bluetooth
-	 * 
-	 * @param successCallback function to be called when disabling of bluetooth was successfull
-	 * @param errorCallback function to be called when disabling was not possible / did fail
-	 */
-	Bluetooth.prototype.disable = function(successCallback,failureCallback) {
-	    return exec(successCallback, failureCallback, 'BluetoothPlugin', 'disable', []);
-	}
-	
-	/**
-	 * Search for devices  and list them
-	 * 
-	 * @param successCallback function to be called when discovery of other devices has finished. Passed parameter is a JSONArray containing JSONObjects with 'name' and 'address' property.
-	 * @param errorCallback function to be called when there was a problem while discovering devices
-	 */
-	Bluetooth.prototype.discoverDevices = function(successCallback,failureCallback) {
-	    return exec(successCallback, failureCallback, 'BluetoothPlugin', 'discoverDevices', []);
-	}
-	
-	/**
-	 * Return list of available UUIDs for a given device
-	 * 
-	 * @param successCallback function to be called when listing of UUIDs has finished. Passed parameter is a JSONArray containing strings which represent the UUIDs
-	 * @param errorCallback function to be called when there was a problem while listing UUIDs
-	 */
-	Bluetooth.prototype.getUUIDs = function(successCallback,failureCallback,address) {
-	    return exec(successCallback, failureCallback, 'BluetoothPlugin', 'getUUIDs', [address]);
-	}
-	
-	/**
-	 * Open an RFComm channel for a given device & uuid endpoint
-	 * 
-	 * @param successCallback function to be called when the connection was successfull. Passed parameter is an integer containing the socket id for the connection
-	 * @param errorCallback function to be called when there was a problem while opening the connection
-	 */
-	Bluetooth.prototype.connect = function(successCallback,failureCallback,address,uuid) {
-	    return exec(successCallback, failureCallback, 'BluetoothPlugin', 'connect', [address, uuid]);
-	}
-	
-	/**
-	 * Close a RFComm channel for a given socket-id
-	 * 
-	 * @param successCallback function to be called when the connection was closed successfully
-	 * @param errorCallback function to be called when there was a problem while closing the connection
-	 */
-	Bluetooth.prototype.disconnect = function(successCallback,failureCallback,socketid) {
-	    return exec(successCallback, failureCallback, 'BluetoothPlugin', 'disconnect', [socketid]);
-	}
-	
-	/**
-	 * Read from a connected socket
-	 * 
-	 * @param successCallback function to be called when reading was successfull. Passed parameter is a string containing the read content
-	 * @param errorCallback function to be called when there was a problem while reading
-	 */
-	Bluetooth.prototype.read = function(successCallback,failureCallback,socketid) {
-	    return exec(successCallback, failureCallback, 'BluetoothPlugin', 'read', [socketid]);
-	}
-	
-	var bluetooth = new Bluetooth();
-	module.exports = bluetooth;
+    var exec = require('cordova/exec');
+    
+    var Bluetooth = function() {};
+    
+    /**
+     * Check if bluetooth API is supported on this platform
+     * @returns true if bluetooth API is supported, false otherwise
+     */
+    Bluetooth.prototype.isSupported = function() {
+        // Currently only supported on android
+        if( device.platform.toLowerCase() == "android" ) return true;
+        
+        return false;
+    }
+    
+    /**
+     * Enable bluetooth
+     * 
+     * @param successCallback function to be called when enabling of bluetooth was successfull
+     * @param errorCallback function to be called when enabling was not possible / did fail
+     */
+    Bluetooth.prototype.enable = function(successCallback,failureCallback) {
+        return exec(successCallback, failureCallback, 'BluetoothPlugin', 'enable', []);
+    }
+    
+    /**
+     * Disable bluetooth
+     * 
+     * @param successCallback function to be called when disabling of bluetooth was successfull
+     * @param errorCallback function to be called when disabling was not possible / did fail
+     */
+    Bluetooth.prototype.disable = function(successCallback,failureCallback) {
+        return exec(successCallback, failureCallback, 'BluetoothPlugin', 'disable', []);
+    }
+    
+    /**
+     * Search for devices  and list them
+     * 
+     * @param successCallback function to be called when discovery of other devices has finished. Passed parameter is a JSONArray containing JSONObjects with 'name' and 'address' property.
+     * @param errorCallback function to be called when there was a problem while discovering devices
+     */
+    Bluetooth.prototype.discoverDevices = function(successCallback,failureCallback) {
+        return exec(successCallback, failureCallback, 'BluetoothPlugin', 'discoverDevices', []);
+    }
+    
+    /**
+     * Return list of available UUIDs for a given device
+     * 
+     * @param successCallback function to be called when listing of UUIDs has finished. Passed parameter is a JSONArray containing strings which represent the UUIDs
+     * @param errorCallback function to be called when there was a problem while listing UUIDs
+     */
+    Bluetooth.prototype.getUUIDs = function(successCallback,failureCallback,address) {
+        return exec(successCallback, failureCallback, 'BluetoothPlugin', 'getUUIDs', [address]);
+    }
+    
+    /**
+     * Open an RFComm channel for a given device & uuid endpoint
+     * 
+     * @param successCallback function to be called when the connection was successfull. Passed parameter is an integer containing the socket id for the connection
+     * @param errorCallback function to be called when there was a problem while opening the connection
+     */
+    Bluetooth.prototype.connect = function(successCallback,failureCallback,address,uuid) {
+        return exec(successCallback, failureCallback, 'BluetoothPlugin', 'connect', [address, uuid]);
+    }
+    
+    /**
+     * Close a RFComm channel for a given socket-id
+     * 
+     * @param successCallback function to be called when the connection was closed successfully
+     * @param errorCallback function to be called when there was a problem while closing the connection
+     */
+    Bluetooth.prototype.disconnect = function(successCallback,failureCallback,socketid) {
+        return exec(successCallback, failureCallback, 'BluetoothPlugin', 'disconnect', [socketid]);
+    }
+    
+    /**
+     * Read from a connected socket
+     * 
+     * @param successCallback function to be called when reading was successfull. Passed parameter is a string containing the read content
+     * @param errorCallback function to be called when there was a problem while reading
+     */
+    Bluetooth.prototype.read = function(successCallback,failureCallback,socketid) {
+        return exec(successCallback, failureCallback, 'BluetoothPlugin', 'read', [socketid]);
+    }
+    
+    var bluetooth = new Bluetooth();
+    module.exports = bluetooth;
 });
 /**
  * 
@@ -7263,7 +7299,7 @@ WebIntent.EXTRA_STREAM = "android.intent.extra.STREAM";
 WebIntent.EXTRA_EMAIL = "android.intent.extra.EMAIL";
 
 WebIntent.prototype.startActivity = function(params, success, fail) {
-	return cordova.exec(function(args) {
+    return cordova.exec(function(args) {
         success(args);
     }, function(args) {
         fail(args);
@@ -7271,7 +7307,7 @@ WebIntent.prototype.startActivity = function(params, success, fail) {
 };
 
 WebIntent.prototype.hasExtra = function(params, success, fail) {
-	return cordova.exec(function(args) {
+    return cordova.exec(function(args) {
         success(args);
     }, function(args) {
         fail(args);
@@ -7279,7 +7315,7 @@ WebIntent.prototype.hasExtra = function(params, success, fail) {
 };
 
 WebIntent.prototype.getUri = function(success, fail) {
-	return cordova.exec(function(args) {
+    return cordova.exec(function(args) {
         success(args);
     }, function(args) {
         fail(args);
@@ -7287,7 +7323,7 @@ WebIntent.prototype.getUri = function(success, fail) {
 };
 
 WebIntent.prototype.getExtra = function(params, success, fail) {
-	return cordova.exec(function(args) {
+    return cordova.exec(function(args) {
         success(args);
     }, function(args) {
         fail(args);
@@ -7296,8 +7332,8 @@ WebIntent.prototype.getExtra = function(params, success, fail) {
 
 
 WebIntent.prototype.onNewIntent = function(callback) {
-	return cordova.exec(function(args) {
-		callback(args);
+    return cordova.exec(function(args) {
+        callback(args);
     }, function(args) {
     }, 'WebIntent', 'onNewIntent', []);
 };
@@ -7311,9 +7347,176 @@ WebIntent.prototype.sendBroadcast = function(params, success, fail) {
 };
 
 cordova.addConstructor(function() {
-	window.webintent = new WebIntent();
-	
-	// backwards compatibility	
-	window.plugins = window.plugins || {};
-	window.plugins.webintent = window.webintent;
+    window.webintent = new WebIntent();
+    
+    // backwards compatibility  
+    window.plugins = window.plugins || {};
+    window.plugins.webintent = window.webintent;
 });
+/**
+ * Plugin for InnovationPlus API
+ * require PhoneGap2.2.0 or higher
+ *
+ * --has these API--
+ * user.login
+ * user.getAuthKey
+ * user.logout
+ * 
+ * profile.retrieveResource
+ * profile.retrieveQueryResource
+ * 
+ * geolocation.retrieveOwnResource
+ * geolocation.retrieveResource
+ * geolocation.createResource
+ * geolocation.deleteResource
+ * geolocation.retrieveQueryResource
+ * 
+ * applicationResource.retrieveResource
+ * applicationResource.retrieveQueryResource
+ * applicationResource.createResource 
+ * applicationResource.deleteResource
+ * 
+ * e.g. InnovationPlus.login('MyId@hogehoge.foo', 'foobar4000', onSucceeded(JSONObject), onFailed(int)); 
+ * 
+ * each methods has success and fail callback
+ * note that fail callback is called when IPPQueryCallback#ippDidError(int) is called;
+ * 
+ * errorcodes defined by this plugin 
+ * -20 : no auth key, please login
+ * -40 : plugin internal error
+ * -60 : invalid parameter
+ */
+window.InnovationPlus = window.InnovationPlus || {};
+(function() {
+    var pluginName = 'InnovationPlusPlugin';
+    var exec = function(a, b, c, d, e) {
+        if (monaca.apiQueue.exec != null) {
+        //  console.log('-------------monaca exec------------------');
+            monaca.apiQueue.exec(a,b,c,d,e);
+        } else {
+        //  console.log('-------------cordova exec---------------------');
+            cordova.exec(a,b,c,d,e);
+        }
+    }
+    // User
+    InnovationPlus.user = InnovationPlus.user || {};
+
+    InnovationPlus.user.login = function(username, password, success, fail) {
+        username = username || null;
+        password = password || null;
+        success = success || null;
+        fail = fail || null;
+
+        var loginJson = {
+            'username' : username,
+            'password' : password
+        };
+        exec(success, fail, pluginName, 'User.login', [loginJson]);
+    }
+    
+    InnovationPlus.user.getAuthKey = function(callback) {
+        callback = callback || null;
+        exec(callback, null, pluginName, 'User.getAuthKey', []);
+    }
+    
+    InnovationPlus.user.logout = function(callback) {
+        callback = callback || null;
+        exec(callback, null, pluginName, 'User.logout', []);
+    }
+
+    // Profile
+    InnovationPlus.profile = InnovationPlus.profile || {};
+
+    InnovationPlus.profile.retrieveResource = function(fields, success, fail) {
+        fields = fields || null;
+        success = success || null;
+        fail = fail || null;
+        exec(success, fail, pluginName, 'Profile.retrieveResource', [fields]);
+    }
+
+    InnovationPlus.profile.retrieveQueryResource = function(param, success, fail) {
+        param = param || null;
+        success = success || null;
+        fail = fail || null;
+        exec(success, fail, pluginName, 'Profile.retrieveQueryResource', [param]);
+    }
+
+    // Geolocation
+    InnovationPlus.geolocation = InnovationPlus.geolocation || {};
+
+    InnovationPlus.geolocation.retrieveOwnResource = function(success, fail) {
+        success = success || null;
+        fail = fail || null;
+        exec(success, fail, pluginName, 'Geolocation.retrieveOwnResource', []);
+    }
+
+    InnovationPlus.geolocation.retrieveResource = function(resourceId, success, fail) {
+        success = success || null;
+        fail = fail || null;
+        resourceId = resourceId || null;
+        exec(success, fail, pluginName, 'Geolocation.retrieveResource', [resourceId]);
+    }
+
+    InnovationPlus.geolocation.createResource = function(requestJson, success, fail) {
+        /* supports geolocations.createResources
+        * requestJson format should be
+        */
+        success = success || null;
+        fail = fail || null;
+        requestJson = requestJson || null;
+        exec(success, fail, pluginName, 'Geolocation.createResource', [requestJson]);
+    }
+
+    InnovationPlus.geolocation.deleteResource = function(resourceId, success, fail) {
+        success = success || null;
+        fail = fail || null;
+        resourceId = resourceId || null;
+        exec(success, fail, pluginName, 'Geolocation.deleteResource', [resourceId]);
+    }
+
+    InnovationPlus.geolocation.retrieveQueryResource = function(param, success, fail) {
+        // originally 'Geolocations' in API
+        // 'bound' : [top, bottom, left, right];
+        // or
+        // 'radiusSquare' : [centerLatitude, centerLongitude, radiusSquare]
+        // is needed
+        success = success || null;
+        fail = fail || null;
+        param = param || null;
+        exec(success, fail, pluginName, 'Geolocation.retrieveQueryResource', [param]);
+    }
+
+    // ApplicationResource
+    InnovationPlus.applicationResource = InnovationPlus.applicationResource || {};
+
+    InnovationPlus.applicationResource.retrieveResource = function(resourceId, success, fail) {
+        success = success || null;
+        fail = fail || null;
+        resourceId = resourceId || null;
+        
+        exec(success, fail, pluginName, 'ApplicationResource.retrieveResource', [resourceId]);
+    }
+
+    InnovationPlus.applicationResource.retrieveQueryResource = function(param, success, fail) {
+        // (8.2)
+        success = success || null;
+        fail = fail || null;
+        param = param || null;
+        exec(success, fail, pluginName, 'ApplicationResource.retrieveQueryResource', [param]);
+    }
+
+    InnovationPlus.applicationResource.createResource = function(requestJson, success, fail) {
+        // supports createResources (8.3)
+        success = success || null;
+        fail = fail || null;
+        requestJson = requestJson || null;
+        exec(success, fail, pluginName, 'ApplicationResource.createResource', [requestJson]);
+    }
+
+    InnovationPlus.applicationResource.deleteResource = function(resourceId, success, fail) {
+        success = success || null;
+        fail = fail || null;
+        resourceId = resourceId || null;
+        exec(success, fail, pluginName, 'ApplicationResource.deleteResource', [resourceId]);
+    }
+})();
