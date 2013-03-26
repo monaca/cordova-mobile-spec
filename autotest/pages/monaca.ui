@@ -59,7 +59,7 @@
           {
               "component": "tabbarItem",
               "id": "tabbar-item1",
-              "link": "all.html?p=1",
+              "link": "monaca.html",
               "style": {
                 "text": "Item1"               
               }
@@ -67,7 +67,7 @@
           {
               "component": "tabbarItem",
               "id": "tabbar-item2",
-              "link": "all.html?p=2",
+              "link": "monaca.html",
               "style": {
                 "text": "Item2"             
               }
