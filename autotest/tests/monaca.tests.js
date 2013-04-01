@@ -66,7 +66,7 @@ describe("Monaca", function() {
         {"key": "opacity", "value": 1.0},
         {"key": "activeTextColor", "value": "#0000FF"},
         {"key": "textColor", "value": "#FFFFFF"},
-        {"key": "text", "value": "Button A"},
+        {"key": "text", "value": "backButton A"},
         {"key": "innerImage", "value": undefined},
         {"key": "forceVisibility", "value": true}
       ];
@@ -77,7 +77,7 @@ describe("Monaca", function() {
       var styles = [
         {"key": "opacity", "value": 1.0},
         {"key": "textColor", "value": "#FFFFFF"},
-        {"key": "text", "value": "Button B"}
+        {"key": "text", "value": "Label A"}
       ];
       createRetrieveUIStyleTest("top-left-label", styles);
     });
@@ -90,8 +90,8 @@ describe("Monaca", function() {
         {"key": "backgroundColor", "value": "#000000"},
         {"key": "activeTextColor", "value": "#0000FF"},
         {"key": "textColor", "value": "#FFFFFF"},
-        {"key": "texts", "value": ["SegA", "SegB", "SegC"]}//,
-//        {"key": "activeIndex", "value": 0}
+        {"key": "texts", "value": ["SegA", "SegB", "SegC"]},
+        {"key": "activeIndex", "value": 0}
       ];
       createRetrieveUIStyleTest("top-right-segment", styles);
     });
@@ -109,25 +109,25 @@ describe("Monaca", function() {
       createRetrieveUIStyleTest("top-right-searchbox", styles);
     });
 
-//    describe("bottom tabbar", function() {
-//      var styles = [
-//        {"key": "visibility", "value": true},
-//        {"key": "opacity", "value": 1.0},
-//        {"key": "backgroundColor", "value": "#000000"},
-//        {"key": "activeIndex", "value": 0}
-//      ];
-//      createRetrieveUIStyleTest("footer", styles);
-//    });
+    describe("bottom tabbar", function() {
+      var styles = [
+        {"key": "visibility", "value": true},
+        {"key": "opacity", "value": 1.0},
+        {"key": "backgroundColor", "value": "#000000"},
+        {"key": "activeIndex", "value": 0}
+      ];
+      createRetrieveUIStyleTest("footer", styles);
+    });
 
-//    describe("bottom tabbaritem1", function() {
-//      var styles = [
-//        {"key": "text", "value": "Item1"},
-//        {"key": "opacity", "value": 1.0},
-//        {"key": "backgroundColor", "value": "#000000"},
-//        {"key": "activeIndex", "value": 0}
-//      ];
-//      createRetrieveUIStyleTest("tabbar-item1", styles);
-//    });
+    describe("bottom tabbaritem1", function() {
+        var styles = [
+        {"key": "text", "value": "Item1"},
+        {"key": "opacity", "value": 1.0},
+        {"key": "backgroundColor", "value": "#000000"},
+        {"key": "activeIndex", "value": 0}
+      ];
+      createRetrieveUIStyleTest("tabbar-item1", styles);
+    });
 
   });
 
