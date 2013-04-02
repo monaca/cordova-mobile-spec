@@ -14,7 +14,11 @@ describe("Monaca", function() {
         var value = object.value;
         it(key, function(){
           var callback = jasmine.createSpy().andCallFake(function(v) {
-            expect(v).toBe(value);
+              if (Array.isArray(v)) {
+                  expect(v.join(",")).toBe(value.join(","));
+                } else {
+                  expect(v).toBe(value);
+                }
           });
            console.log('running retrieveStyle ' + id + ', ' + key + ' : ' + value );
           runs(function() { monaca.retrieveUIStyle(id, key, callback); });
@@ -47,14 +51,9 @@ describe("Monaca", function() {
         {"key": "backgroundColor", "value": "#000000"},
         {"key": "activeTextColor", "value": "#0000FF"},
         {"key": "textColor", "value": "#FFFFFF"},
-        {"key": "image", "value": undefined},
-        {"key": "innerImage", "value": undefined},
-        {"key": "text", "value": "Button A"},
-        {"key": "subtitle", "value": ""},
-        {"key": "titleColor", "value": "#FFFFFF"},
-        {"key": "subtitleColor", "value": "#FFFFFF"},
-        {"key": "titleFontScale", "value": 1.0},
-        {"key": "subtitleFontScale", "value": 1.0}
+//        {"key": "image", "value": undefined},
+//       {"key": "innerImage", "value": undefined},
+        {"key": "text", "value": "Button A"}
       ];
       createRetrieveUIStyleTest("top-left-button", styles);
     });
@@ -67,7 +66,8 @@ describe("Monaca", function() {
         {"key": "activeTextColor", "value": "#0000FF"},
         {"key": "textColor", "value": "#FFFFFF"},
         {"key": "text", "value": "backButton A"},
-        {"key": "innerImage", "value": undefined},
+//        {"key": "innerImage", "value": undefined},
+//      {"key": "image", "value": undefined},
         {"key": "forceVisibility", "value": true}
       ];
       createRetrieveUIStyleTest("top-left-backbutton", styles);
@@ -113,7 +113,7 @@ describe("Monaca", function() {
       var styles = [
         {"key": "visibility", "value": true},
         {"key": "opacity", "value": 1.0},
-        {"key": "backgroundColor", "value": "#000000"},
+        {"key": "backgroundColor", "value": "#334466"},
         {"key": "activeIndex", "value": 0}
       ];
       createRetrieveUIStyleTest("footer", styles);
@@ -123,8 +123,7 @@ describe("Monaca", function() {
         var styles = [
         {"key": "text", "value": "Item1"},
         {"key": "opacity", "value": 1.0},
-        {"key": "backgroundColor", "value": "#000000"},
-        {"key": "activeIndex", "value": 0}
+        {"key": "backgroundColor", "value": "#000000"}
       ];
       createRetrieveUIStyleTest("tabbar-item1", styles);
     });
@@ -137,7 +136,7 @@ describe("Monaca", function() {
 
     function createUpdateUIStyleTest(id, styles) {
       styles.forEach(function(object) {
-                     
+
         var key = object.key;
         var value = object.value;
         console.log('running updateStyle ' + id + ', ' + key + ' : ' + value );
@@ -187,12 +186,7 @@ describe("Monaca", function() {
         {"key": "textColor", "value": "#0000FF"},
 //        {"key": "image", "value": undefined},
 //        {"key": "innerImage", "value": undefined},
-        {"key": "text", "value": "Button AX"},
-        {"key": "subtitle", "value": "X"},
-        {"key": "titleColor", "value": "#222222"},
-        {"key": "subtitleColor", "value": "#555555"},
-        {"key": "titleFontScale", "value": 0.5},
-        {"key": "subtitleFontScale", "value": 0.5}
+        {"key": "text", "value": "Button AX"}
       ];
 
       createUpdateUIStyleTest("top-left-button", styles);
@@ -208,6 +202,7 @@ describe("Monaca", function() {
         {"key": "textColor", "value": "#FFFFFF"},
         {"key": "text", "value": "Button A"},
 //        {"key": "innerImage", "value": undefined},
+//      {"key": "image", "value": undefined},
         {"key": "forceVisibility", "value": true}
       ];
       createUpdateUIStyleTest("top-left-backbutton", styles);
