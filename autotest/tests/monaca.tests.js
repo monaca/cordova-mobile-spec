@@ -51,8 +51,8 @@ describe("Monaca", function() {
         {"key": "backgroundColor", "value": "#000000"},
         {"key": "activeTextColor", "value": "#0000FF"},
         {"key": "textColor", "value": "#FFFFFF"},
-//        {"key": "image", "value": undefined},
-//       {"key": "innerImage", "value": undefined},
+        {"key": "image", "value": undefined},
+       {"key": "innerImage", "value": undefined},
         {"key": "text", "value": "Button A"}
       ];
       createRetrieveUIStyleTest("top-left-button", styles);
@@ -66,8 +66,8 @@ describe("Monaca", function() {
         {"key": "activeTextColor", "value": "#0000FF"},
         {"key": "textColor", "value": "#FFFFFF"},
         {"key": "text", "value": "backButton A"},
-//        {"key": "innerImage", "value": undefined},
-//      {"key": "image", "value": undefined},
+        {"key": "innerImage", "value": undefined},
+      {"key": "image", "value": undefined},
         {"key": "forceVisibility", "value": true}
       ];
       createRetrieveUIStyleTest("top-left-backbutton", styles);
@@ -184,8 +184,8 @@ describe("Monaca", function() {
         {"key": "backgroundColor", "value": "#00FF00"},
         {"key": "activeTextColor", "value": "#FF0000"},
         {"key": "textColor", "value": "#0000FF"},
-//        {"key": "image", "value": undefined},
-//        {"key": "innerImage", "value": undefined},
+        {"key": "image", "value": undefined},
+        {"key": "innerImage", "value": undefined},
         {"key": "text", "value": "Button AX"}
       ];
 
@@ -201,8 +201,8 @@ describe("Monaca", function() {
         {"key": "activeTextColor", "value": "#0000FF"},
         {"key": "textColor", "value": "#FFFFFF"},
         {"key": "text", "value": "Button A"},
-//        {"key": "innerImage", "value": undefined},
-//      {"key": "image", "value": undefined},
+        {"key": "innerImage", "value": undefined},
+      {"key": "image", "value": undefined},
         {"key": "forceVisibility", "value": true}
       ];
       createUpdateUIStyleTest("top-left-backbutton", styles);
@@ -226,8 +226,8 @@ describe("Monaca", function() {
         {"key": "backgroundColor", "value": "#00FF00"},
         {"key": "activeTextColor", "value": "#FF0000"},
         {"key": "textColor", "value": "#0000FF"},
-        {"key": "texts", "value": ["SegAX", "SegBX", "SegCX"]}//,
-//        {"key": "activeIndex", "value": 1}
+        {"key": "texts", "value": ["SegAX", "SegBX", "SegCX"]},
+        {"key": "activeIndex", "value": 1}
       ];
       createUpdateUIStyleTest("top-right-segment", styles);
     });
@@ -247,28 +247,28 @@ describe("Monaca", function() {
       createUpdateUIStyleTest("top-right-searchbox", styles);
     });
 
-//    describe("bottom tabbar", function() {
-//    console.log('bottom tabbar update style');
-//      var styles = [
-//        {"key": "visibility", "value": false},
-//        {"key": "visibility", "value": true},
-//        {"key": "opacity", "value": 0.5},
-//        {"key": "backgroundColor", "value": "#00FF00"}//,
-//        {"key": "activeIndex", "value": 1}
-//      ];
-//      createUpdateUIStyleTest("footer", styles);
-//    });
+    describe("bottom tabbar", function() {
+    console.log('bottom tabbar update style');
+      var styles = [
+        {"key": "visibility", "value": false},
+        {"key": "visibility", "value": true},
+        {"key": "opacity", "value": 0.5},
+        {"key": "backgroundColor", "value": "#00FF00"},
+        {"key": "activeIndex", "value": 1}
+      ];
+      createUpdateUIStyleTest("footer", styles);
+    });
 
-//    describe("bottom tabbaritem1", function() {
-//                 console.log('bottom tabbaritem1 update style');
-//      var styles = [
-//        {"key": "text", "value": "Item1X"},
-//        {"key": "opacity", "value": 0.5},
-//        {"key": "backgroundColor", "value": "#00FF00"}//,
-//        {"key": "activeIndex", "value": 1}
-//      ];
-//      createUpdateUIStyleTest("tabbar-item1", styles);
-//    });
+    describe("bottom tabbaritem1", function() {
+                 console.log('bottom tabbaritem1 update style');
+      var styles = [
+        {"key": "text", "value": "Item1X"},
+        {"key": "opacity", "value": 0.5},
+        {"key": "backgroundColor", "value": "#00FF00"},
+        {"key": "activeIndex", "value": 1}
+      ];
+      createUpdateUIStyleTest("tabbar-item1", styles);
+    });
 
   });
 });
