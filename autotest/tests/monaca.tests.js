@@ -226,8 +226,8 @@ describe("Monaca", function() {
         {"key": "backgroundColor", "value": "#00FF00"},
         {"key": "activeTextColor", "value": "#FF0000"},
         {"key": "textColor", "value": "#0000FF"},
-        {"key": "texts", "value": ["SegAX", "SegBX", "SegCX"]},
-        {"key": "activeIndex", "value": 1}
+        {"key": "texts", "value": ["SegAX", "SegBX", "SegCX"]}//,
+//        {"key": "activeIndex", "value": 1}
       ];
       createUpdateUIStyleTest("top-right-segment", styles);
     });
@@ -253,8 +253,8 @@ describe("Monaca", function() {
         {"key": "visibility", "value": false},
         {"key": "visibility", "value": true},
         {"key": "opacity", "value": 0.5},
-        {"key": "backgroundColor", "value": "#00FF00"},
-        {"key": "activeIndex", "value": 1}
+        {"key": "backgroundColor", "value": "#00FF00"}//,
+//        {"key": "activeIndex", "value": 1}
       ];
       createUpdateUIStyleTest("footer", styles);
     });
@@ -264,8 +264,8 @@ describe("Monaca", function() {
       var styles = [
         {"key": "text", "value": "Item1X"},
         {"key": "opacity", "value": 0.5},
-        {"key": "backgroundColor", "value": "#00FF00"},
-        {"key": "activeIndex", "value": 1}
+        {"key": "backgroundColor", "value": "#00FF00"}//,
+//        {"key": "activeIndex", "value": 1}
       ];
       createUpdateUIStyleTest("tabbar-item1", styles);
     });
