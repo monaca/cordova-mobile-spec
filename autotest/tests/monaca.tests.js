@@ -101,8 +101,8 @@ describe("Monaca", function() {
         {"key": "visibility", "value": true},
         {"key": "disable", "value": false},
         {"key": "opacity", "value": 1.0},
-        {"key": "backgroundColor", "value": "#000000"},
-        {"key": "textColor", "value": "#FFFFFF"},
+        {"key": "backgroundColor", "value": "#FFFFFF"},
+        {"key": "textColor", "value": "#000000"},
         {"key": "placeholder", "value": "Search"},
         {"key": "focus", "value": false}
       ];
