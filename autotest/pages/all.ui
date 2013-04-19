@@ -51,8 +51,7 @@
     "bottom": {
         "container" : "tabbar",
         "style" : {
-            "backgroundColor" : "#334466",
-            "iosBarStyle" : "UIBarStyleBlackTranslucent"
+            "backgroundColor" : "#334466"
         },
         "id": "footer",
         "items": [
