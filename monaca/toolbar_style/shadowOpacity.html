@@ -35,6 +35,12 @@
     function retrieveTop() {
         monaca.retrieveUIStyle("header", "shadowOpacity", function(a){ $('#result').val(a)});
     }
+    function updateBottom() {
+        monaca.updateUIStyle("footer", "shadowOpacity", $('#result').val());
+    }
+    function retrieveBottom() {
+        monaca.retrieveUIStyle("footer", "shadowOpacity", function(a){ $('#result').val(a)});
+    }
     function clearForm() {
     	 $('#result').val(' ');
     }
@@ -52,6 +58,8 @@
     <h2> </h2><br>
     <div class="btn large" onclick="updateTop()">updateUIStyle Top</div>
     <div class="btn large" onclick="retrieveTop()">retrieveUIStyle Top</div>
+    <div class="btn large" onclick="updateBottom()">updateUIStyle Bottom</div>
+    <div class="btn large" onclick="retrieveBottom()">retrieveUIStyle Bottom</div>
         <h2> </h2><div class="backBtn" onclick="backHome();">Back</div>
   </body>
 </html>
