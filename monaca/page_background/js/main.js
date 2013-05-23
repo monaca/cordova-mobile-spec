@@ -32,6 +32,42 @@ $(function(){
     
     $('#backgroundPosition').change(function(){
         var newVal = $('#backgroundPosition').val();
+         if(newVal === "center center")
+         {
+            newVal = ["center", "center"];
+        }
+        else if(newVal === "center top")
+        {
+            newVal = ["center", "top"];
+        }
+        else if(newVal === "center bottom")
+        {
+            newVal = ["center", "bottom"];
+        }
+        else if(newVal === "left top")
+        {
+            newVal = ["left", "top"];
+        }
+        else if(newVal === "left center")
+        {
+            newVal = ["left", "center"];
+        }
+        else if(newVal === "left bottom")
+        {
+            newVal = ["left", "bottom"];
+        }
+        else if(newVal === "right top")
+        {
+            newVal = ["right", "top"];
+        }
+        else if(newVal === "right center")
+        {
+            newVal = ["right", "center"];
+        }
+        else if(newVal === "right bottom")
+        {
+            newVal = ["right", "bottom"];
+        }
         monaca.updateUIStyle('page', 'backgroundPosition', newVal);
     });
     
