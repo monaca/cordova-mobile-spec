@@ -1,0 +1,13 @@
+body{
+	color: white;
+}
+
+.instruction {
+	background-color: yellow;
+	color: black;
+	padding: 5px;
+}
+
+.file_name {
+	background-color: gray;
+}

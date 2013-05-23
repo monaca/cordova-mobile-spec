@@ -1,0 +1,10 @@
+{
+  "top" : {
+      "container" : "toolbar",
+      "id": "header",
+      "style" : {
+        "title" : "Monaca Test"
+      }
+  },
+  "menu": "my_menu"
+}
