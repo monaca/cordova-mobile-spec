@@ -49,6 +49,13 @@
     }    
     function slideLeft() {
 		monaca.pushPage('index.html', {animation: 'slideLeft'}, {'key1': 'val1'});
+    }        
+    function queryParamsDisplay() {
+	    var test = monaca.queryParams['key1'];
+        alert(test);
+    }    
+    function locationDisplay() {
+		alert(location.href);
     }    
 </script>
 
@@ -63,6 +70,8 @@
     <div class="btn large" onclick="none();">animation:none</div>
     <div class="btn large" onclick="slideRight();">animation:slideRight</div>
     <div class="btn large" onclick="slideLeft();">animation:slideLeft</div>
+    <div class="btn large" onclick="queryParamsDisplay();">queryParams:Display</div>
+    <div class="btn large" onclick="locationDisplay();">locationDisplay</div>
         <h2> </h2><div class="backBtn" onclick="backHome();">Back</div>
   </body>
 </html>      
