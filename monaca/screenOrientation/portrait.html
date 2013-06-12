@@ -1,0 +1,26 @@
+<!DOCTYPE HTML>
+<html>
+    <head>
+        <meta charset="utf-8">
+    <link rel="stylesheet" href="../../master.css" type="text/css" media="screen" title="no title" charset="utf-8">
+    <script type="text/javascript" charset="utf-8" src="../../cordova.js"></script>      
+    <script type="text/javascript" charset="utf-8">
+            // Set virtual screen width size to 640 pixels
+            monaca.viewport({width: 640});
+
+            // PhoneGap event handler
+            document.addEventListener("deviceready", onDeviceReady, false);
+            function onDeviceReady() {
+                // Update Toolbar Header
+                monaca.updateUIStyle("tapme-button", "disable", false);
+            }
+            function onTapButton(){
+                // Triggers when button is tapped: defined in index.ui
+                navigator.notification.alert("HelloWorld", function() {}, " ", "OK")
+            }
+        </script>
+    </head>
+    <body>
+        <h1>screenOrientation: inherit</h1>
+    </body>
+</html>

@@ -1,0 +1,44 @@
+{
+    "top" : {
+        "container" : "toolbar",
+        "id" : "header",
+        "style" : {
+            "title" : "landscape",
+            "backgroundColor" : "#576F96"
+        },
+        "left": [
+            {
+                "component": "backButton",
+                "style": {
+                        "text": "back"
+                },
+                "androidStyle" : {
+                    "backgroundColor" : "#314A78"
+                },
+                "event": {
+                    "onTap": "monaca.pushPage('../index.html');"
+                }
+            }
+        ],
+        "right": [
+            {
+                "component": "button",
+                "style": {
+                        "text": "to portrait",
+                        "backgroundColor" : "#576F96"
+                },
+                "androidStyle" : {
+                    "backgroundColor" : "#314A78"
+                },
+                "event": {
+                    "onTap": "monaca.pushPage('portrait.html');"
+                },
+                "id": "tapme-button"
+            }
+        ]
+    },
+ 
+  "style": {
+      "screenOrientation": "landscape"
+  }
+}
