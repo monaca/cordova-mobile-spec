@@ -88,7 +88,7 @@ describe("Monaca", function() {
         {"key": "disable", "value": false},
         {"key": "opacity", "value": 1.0},
         {"key": "backgroundColor", "value": "#000000"},
-        {"key": "activeTextColor", "value": "#0000FF"},
+        {"key": "activeTextColor", "value": "#FFFFFF"},
         {"key": "textColor", "value": "#FFFFFF"},
         {"key": "texts", "value": ["SegA", "SegB", "SegC"]},
         {"key": "activeIndex", "value": 0}
