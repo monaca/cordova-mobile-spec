@@ -122,7 +122,6 @@ describe("Monaca", function() {
     describe("bottom tabbaritem1", function() {
         var styles = [
         {"key": "text", "value": "Item1"},
-        {"key": "opacity", "value": 1.0},
         {"key": "backgroundColor", "value": "#000000"}
       ];
       createRetrieveUIStyleTest("tabbar-item1", styles);
