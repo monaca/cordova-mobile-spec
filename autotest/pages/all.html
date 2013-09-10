@@ -99,10 +99,14 @@
                   temp_root = fileSystem.root; // set in file.tests.js
               }, onError);
       }, false);
+      
+      function pop() {
+      	monaca.popPage();
+      }
   </script>
 </head>
 
 <body>
-  <a href="javascript:" class="backBtn" onclick="backHome();">Back</a>
+  <a href="javascript:" class="backBtn" onclick="pop();">Back</a>
 </body>
 </html>
