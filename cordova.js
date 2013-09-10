@@ -41,8 +41,8 @@ var PLAT;
 
 var scripts = document.getElementsByTagName('script');
 var currentPath = scripts[scripts.length - 1].src;
-var platformCordovaPath = currentPath.replace("cordova-incl.js", "cordova." + PLAT + ".js");
-var normalCordovaPath = currentPath.replace("cordova-incl.js", "cordova.js");
+var platformCordovaPath = currentPath.replace("cordova.js", "cordova." + PLAT + ".js");
+var normalCordovaPath = currentPath.replace("cordova.js", "cordova.js");
 var cordovaPath = normalCordovaPath;
 
 if (PLAT) {
