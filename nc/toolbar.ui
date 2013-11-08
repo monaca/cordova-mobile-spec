@@ -1,0 +1,68 @@
+{
+    "top" : {
+        "id":"header",
+        "container" : "toolbar",
+        "style" : {
+            "title" : ""
+        },
+        "left": [
+            {
+                "component": "backButton",
+                "style": {
+                        "text": "Button A"
+                },
+                "event": {
+                    "onTap": "monaca.popPage();"
+                }
+            }
+        ],
+        "right": [
+            {
+                "component": "button",
+                "style": {
+                    "text": "Button"
+                },
+                "event": {
+                    "onTap": "alert('Touch');"
+                },
+                "id":"top-button"
+            }
+        ]
+    },
+    "bottom": {
+        "id":"footer",
+        "container" : "toolbar",
+        "style" : {
+        },
+        "left": [
+            {
+                "component": "label",
+                "style": {
+                        "text": "Label"
+                },
+                "id":"bottom-label"
+            }
+        ],
+        "center": [
+            {
+                "component": "searchBox",
+                "style": {
+                },
+                "event": {
+                    "onTap": "alert('Search!');"
+                },
+                "id":"bottom-searchbox"
+            }
+        ],
+        "right": [
+            {
+                "component": "segment",
+                "style": {
+                        "texts": ["s1","s2"]
+                },
+                "id":"bottom-segment"
+            }
+        ]
+    }
+}
+

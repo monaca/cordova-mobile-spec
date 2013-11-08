@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="en" ng-app="myApp">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <link rel="stylesheet" href="plugins/plugin-loader.css">     
+  <script type="text/javascript" src="plugins/plugin-loader.js"></script>
+  
+  <script>
+    angular.module('myApp', ['onsen.directives']);   
+    
+    document.addEventListener("deviceready", onDeviceReady, false);
+
+    function onDeviceReady() {
+        // Now safe to use the Cordova API
+    }
+  </script>    
+  
+</head>
+
+
+<body>    
+  
+  <ons-screen page="home_navigator.html"></ons-screen>
+ 
+</body>
+</html>

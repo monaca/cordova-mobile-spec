@@ -1,0 +1,49 @@
+<!doctype html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" href="../plugins/plugin-loader.css">
+    <link rel="stylesheet" href="../css/style.css">
+    <script type="text/javascript" src="../plugins/plugin-loader.js"></script>
+  
+    <script>
+        document.addEventListener("deviceready", onDeviceReady, false);
+        
+        function onDeviceReady() {
+            // Now safe to use the Cordova API
+            
+        }
+    
+    </script>
+</head>
+<body>    
+    <div class="page center">
+        <div class="topcoat-list">
+            <h3 class="topcoat-list__header left">Top Toolbar</h3>
+            <ul class="topcoat-list__container">
+                <li class="topcoat-list__item" onclick="monaca.updateUIStyle('header', 'title', 'Change!');">
+                    Change Toolbar Title
+                </li>
+                <li class="topcoat-list__item" onclick="monaca.updateUIStyle('header', 'backgroundColor', '#25b5c2');">
+                    Change Toolbar Color
+                </li>
+                <li class="topcoat-list__item" onclick="monaca.updateUIStyle('top-button', 'visibility', false);">
+                    Change Button invisible
+                </li>
+            </ul>
+            <h3 class="topcoat-list__header left">Bottom Toolbar</h3>
+            <ul class="topcoat-list__container">
+                <li class="topcoat-list__item" onclick="monaca.updateUIStyle('bottom-label', 'textColor', '#25b5c2');">
+                    Change Label Text Color
+                </li>
+                <li class="topcoat-list__item" onclick="monaca.updateUIStyle('bottom-searchbox', 'opacity', 0.2);">
+                    Change SearchBox Opacity
+                </li>
+                <li class="topcoat-list__item" onclick="monaca.updateUIStyle('bottom-segment', 'activeIndex', 1);">
+                    Change Segment ActiveIndex
+                </li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html>

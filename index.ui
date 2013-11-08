@@ -1,0 +1,37 @@
+{
+    "top" : {
+        "id" : "header",
+        "container" : "toolbar",
+            "style" : {
+                "title" : "Monaca Demo"
+            }
+    },
+    "bottom" : {
+            "container" : "tabbar",
+            "id" : "footer",
+            "style" : {
+                "visibility" : true,
+                "iosThemeColor":"#25b5c2"
+            },
+            "items":
+                [
+                    {
+                        "component": "tabbarItem",
+                        "style": {
+                            "text": "Index",
+                            "image": "image/cube.png"
+                        },
+                         "link": "index.html"
+                    },
+                    {
+                        "component": "tabbarItem",
+                        "style": {
+                            "text": "API",
+                            "image": "image/page.png"
+                        },
+                        "link": "api-demo.html"
+                    }
+                ]
+    }
+}
+

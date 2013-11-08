@@ -1,0 +1,20 @@
+{
+    "top" : {
+        "container" : "toolbar",
+        "style" : {
+            "title" : "Animation"
+        },
+        "left": [
+            {
+                "component": "backButton",
+                "style": {
+                        "text": "Back"
+                },
+                "event": {
+                    "onTap": "monaca.popPage();"
+                }
+            }
+        ]
+    }
+}
+

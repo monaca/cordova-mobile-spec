@@ -1,0 +1,95 @@
+<!doctype html>
+<head>
+    <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+        <link rel="stylesheet" href="plugins/plugin-loader.css">
+        <link rel="stylesheet" href="css/style.css">
+        <script type="text/javascript" src="plugins/plugin-loader.js"></script>
+        <script type="text/javascript" src="js/api-demo.js"></script>
+        <script>
+            document.addEventListener("deviceready", onDeviceReady, false);
+            
+            function onDeviceReady() {
+            // Now safe to use the Cordova API
+                monaca.updateUIStyle("header", "title", "API Demo");
+            }
+        </script>
+</head>
+<body>
+    <div class="page left">
+        <div class="topcoat-list">
+            <h3 class="topcoat-list__header left">API List</h3>
+            <ul class="topcoat-list__container">
+            <!--
+                <li class="topcoat-list__item">
+                    <i class="fa fa-camera-retro fa-lg"></i>
+                    Accelerometer
+                </li>
+            -->
+                <li class="topcoat-list__item" onclick="pushCamera();">
+                    <i class="fa fa-camera-retro fa-lg"></i>
+                    Camera
+                </li>
+            <!--
+                <li class="topcoat-list__item">
+                    <i class="fa fa-camera-retro fa-lg"></i>
+                    Capture
+                </li>
+                <li class="topcoat-list__item">
+                    <i class="fa fa-camera-retro fa-lg"></i>
+                    Compass
+                </li>
+                <li class="topcoat-list__item" onclick="check_network();">
+                    <i class="fa fa-camera-retro fa-lg"></i>
+                    Connection
+                </li>
+                <li class="topcoat-list__item">
+                    <i class="fa fa-camera-retro fa-lg"></i>
+                    Contacts
+                </li>
+                <li class="topcoat-list__item">
+                    <i class="fa fa-camera-retro fa-lg"></i>
+                    Device
+                </li>
+                <li class="topcoat-list__item">
+                    <i class="fa fa-camera-retro fa-lg"></i>
+                    Events
+                </li>
+                <li class="topcoat-list__item">
+                    <i class="fa fa-camera-retro fa-lg"></i>
+                    File
+                </li>
+                <li class="topcoat-list__item" onclick="getLocation();">
+                    <i class="fa fa-camera-retro fa-lg"></i>
+                    Geolocation
+                </li>
+                <li class="topcoat-list__item">
+                    <i class="fa fa-camera-retro fa-lg"></i>
+                    Globalization
+                </li>
+                <li class="topcoat-list__item">
+                    <i class="fa fa-camera-retro fa-lg"></i>
+                    InAppBrowser
+                </li>
+                <li class="topcoat-list__item">
+                    <i class="fa fa-camera-retro fa-lg"></i>
+                    Media
+                </li>
+                <li class="topcoat-list__item">
+                    <i class="fa fa-camera-retro fa-lg"></i>
+                    Notification
+                </li>
+                <li class="topcoat-list__item">
+                    <i class="fa fa-camera-retro fa-lg"></i>
+                    Splashscreen
+                </li>
+                <li class="topcoat-list__item">
+                    <i class="fa fa-camera-retro fa-lg"></i>
+                    Storage
+                </li>
+            -->
+            </ul>
+        </div>
+    </div>
+</body>
+</html>

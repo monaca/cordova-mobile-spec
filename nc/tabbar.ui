@@ -1,0 +1,45 @@
+{
+    "top" : {
+        "id":"header",
+        "container" : "toolbar",
+        "style" : {
+            "title" : ""
+        },
+        "left": [
+            {
+                "component": "backButton",
+                "style": {
+                        "text": "Back"
+                },
+                "event": {
+                    "onTap": "monaca.popPage();"
+                }
+            }
+        ]
+    },
+  "bottom": {
+      "container" : "tabbar",
+      "id" : "tabbar",
+      "style" : {
+          "visibility": "true"
+      },
+      "items": [
+          {
+              "component": "tabbarItem",
+              "style": {
+                      "text": "Tab1",
+                      "image": "../image/cube.png"
+              },
+              "link" : "tabbar.html"
+          },
+          {
+              "component": "tabbarItem",
+              "style": {
+                      "text": "Tab2",
+                      "image": "../image/cube.png"
+              },
+              "link" : "tabbar2.html"
+          }
+      ]
+    }
+}
