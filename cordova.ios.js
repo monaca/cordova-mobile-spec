@@ -313,8 +313,9 @@ window.monaca.cloud = window.monaca.cloud || {};
  }
  };
  })();
+
 // Platform: ios
-// 2.9.0-0-g83dc4bd
+// 2.9.1
 /*
  Licensed to the Apache Software Foundation (ASF) under one
  or more contributor license agreements.  See the NOTICE file
@@ -334,7 +335,7 @@ window.monaca.cloud = window.monaca.cloud || {};
  under the License.
  */
 ;(function() {
-  var CORDOVA_JS_BUILD_LABEL = '2.9.0-0-g83dc4bd';
+  var CORDOVA_JS_BUILD_LABEL = '2.9.1';
   // file: lib/scripts/require.js
   
   var require,
@@ -415,6 +416,7 @@ window.monaca.cloud = window.monaca.cloud || {};
          
          
          var channel = require('cordova/channel');
+         var platform = require('cordova/platform');
          
 /**
  * Listen for DOMContentLoaded and notify our channel subscribers.
@@ -497,10 +499,18 @@ window.monaca.cloud = window.monaca.cloud || {};
          log:function(){}
          };
          }
+         // there are places in the framework where we call `warn` also, so we should make sure it exists
+         if(typeof window.console.warn === "undefined") {
+         window.console.warn = function(msg) {
+         this.log("warn: " + msg);
+         };
+         }
          
          var cordova = {
          define:define,
          require:require,
+         version:CORDOVA_JS_BUILD_LABEL,
+         platformId:platform.id,
          /**
           * Methods to add/remove your own addEventListener hijacking on document + window.
           */
@@ -691,7 +701,7 @@ window.monaca.cloud = window.monaca.cloud || {};
          if (errMsg) {
          errMsg += ', but got ' + typeName + '.';
          errMsg = 'Wrong type for parameter "' + extractParamName(opt_callee || args.callee, i) + '" of ' + functionName + ': ' + errMsg;
-         // Don't log when running jake test.
+         // Don't log when running unit tests.
          if (typeof jasmine == 'undefined') {
          console.error(errMsg);
          }
@@ -707,6 +717,62 @@ window.monaca.cloud = window.monaca.cloud || {};
          moduleExports.getValue = getValue;
          moduleExports.enableChecks = true;
          
+         
+         });
+  
+  // file: lib/common/base64.js
+  define("cordova/base64", function(require, exports, module) {
+         
+         var base64 = exports;
+         
+         base64.fromArrayBuffer = function(arrayBuffer) {
+         var array = new Uint8Array(arrayBuffer);
+         return uint8ToBase64(array);
+         };
+         
+         //------------------------------------------------------------------------------
+         
+/* This code is based on the performance tests at http://jsperf.com/b64tests
+ * This 12-bit-at-a-time algorithm was the best performing version on all
+ * platforms tested.
+ */
+         
+         var b64_6bit = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
+         var b64_12bit;
+         
+         var b64_12bitTable = function() {
+         b64_12bit = [];
+         for (var i=0; i<64; i++) {
+         for (var j=0; j<64; j++) {
+         b64_12bit[i*64+j] = b64_6bit[i] + b64_6bit[j];
+         }
+         }
+         b64_12bitTable = function() { return b64_12bit; };
+         return b64_12bit;
+         };
+         
+         function uint8ToBase64(rawData) {
+         var numBytes = rawData.byteLength;
+         var output="";
+         var segment;
+         var table = b64_12bitTable();
+         for (var i=0;i<numBytes-2;i+=3) {
+         segment = (rawData[i] << 16) + (rawData[i+1] << 8) + rawData[i+2];
+         output += table[segment >> 12];
+         output += table[segment & 0xfff];
+         }
+         if (numBytes - i == 2) {
+         segment = (rawData[i] << 16) + (rawData[i+1] << 8);
+         output += table[segment >> 12];
+         output += b64_6bit[(segment & 0xfff) >> 6];
+         output += '=';
+         } else if (numBytes - i == 1) {
+         segment = (rawData[i] << 16);
+         output += table[segment >> 12];
+         output += '==';
+         }
+         return output;
+         }
          
          });
   
@@ -1115,6 +1181,7 @@ window.monaca.cloud = window.monaca.cloud || {};
          var cordova = require('cordova'),
          channel = require('cordova/channel'),
          utils = require('cordova/utils'),
+         base64 = require('cordova/base64'),
          jsToNativeModes = {
          IFRAME_NAV: 0,
          XHR_NO_PAYLOAD: 1,
@@ -1156,17 +1223,11 @@ window.monaca.cloud = window.monaca.cloud || {};
          return args;
          }
          var ret = [];
-         var encodeArrayBufferAs8bitString = function(ab) {
-         return String.fromCharCode.apply(null, new Uint8Array(ab));
-         };
-         var encodeArrayBufferAsBase64 = function(ab) {
-         return window.btoa(encodeArrayBufferAs8bitString(ab));
-         };
          args.forEach(function(arg, i) {
                       if (utils.typeName(arg) == 'ArrayBuffer') {
                       ret.push({
                                'CDVType': 'ArrayBuffer',
-                               'data': encodeArrayBufferAsBase64(arg)
+                               'data': base64.fromArrayBuffer(arg)
                                });
                       } else {
                       ret.push(arg);
@@ -1241,8 +1302,7 @@ window.monaca.cloud = window.monaca.cloud || {};
                      "cordova.exec(null, null, \"" + service + "\", \"" + action + "\"," + JSON.stringify(actionArgs) + ");"
                      );
          return;
-         } catch (e) {
-         }
+         } catch (e) {}
          }
          
          // Register the callbacks and add the callbackId to the positional
@@ -1377,6 +1437,10 @@ window.monaca.cloud = window.monaca.cloud || {};
          addEntry('d', moduleName, symbolPath, opt_deprecationMessage);
          };
          
+         exports.runs = function(moduleName) {
+         addEntry('r', moduleName, null);
+         };
+         
          function prepareNamespace(symbolPath, context) {
          if (!symbolPath) {
          return context;
@@ -1395,12 +1459,16 @@ window.monaca.cloud = window.monaca.cloud || {};
          for (var i = 0, len = symbolList.length; i < len; i += 3) {
          var strategy = symbolList[i];
          var moduleName = symbolList[i + 1];
+         var module = require(moduleName);
+         // <runs/>
+         if (strategy == 'r') {
+         continue;
+         }
          var symbolPath = symbolList[i + 2];
          var lastDot = symbolPath.lastIndexOf('.');
          var namespace = symbolPath.substr(0, lastDot);
          var lastName = symbolPath.substr(lastDot + 1);
          
-         var module = require(moduleName);
          var deprecationMsg = symbolPath in deprecationMap ? 'Access made to deprecated symbol: ' + symbolPath + '. ' + deprecationMsg : null;
          var parentObj = prepareNamespace(namespace, context);
          var target = parentObj[lastName];
@@ -2230,6 +2298,7 @@ window.monaca.cloud = window.monaca.cloud || {};
  */
          function DirectoryReader(path) {
          this.path = path || null;
+         this.hasReadEntries = false;
          }
          
 /**
@@ -2239,6 +2308,12 @@ window.monaca.cloud = window.monaca.cloud || {};
  * @param {Function} errorCallback is called with a FileError
  */
          DirectoryReader.prototype.readEntries = function(successCallback, errorCallback) {
+         // If we've already read and passed on this directory's entries, return an empty list.
+         if (this.hasReadEntries) {
+         successCallback([]);
+         return;
+         }
+         var reader = this;
          var win = typeof successCallback !== 'function' ? null : function(result) {
          var retVal = [];
          for (var i=0; i<result.length; i++) {
@@ -2255,6 +2330,7 @@ window.monaca.cloud = window.monaca.cloud || {};
          entry.fullPath = result[i].fullPath;
          retVal.push(entry);
          }
+         reader.hasReadEntries = true;
          successCallback(retVal);
          };
          var fail = typeof errorCallback !== 'function' ? null : function(code) {
@@ -3365,26 +3441,27 @@ window.monaca.cloud = window.monaca.cloud || {};
  */
          FileWriter.prototype.write = function(data) {
          
-         var isBinary = false;
-         
-         // If we don't have Blob or ArrayBuffer support, don't bother.
-         if (typeof window.Blob !== 'undefined' && typeof window.ArrayBuffer !== 'undefined') {
+         var that=this;
+         var supportsBinary = (typeof window.Blob !== 'undefined' && typeof window.ArrayBuffer !== 'undefined');
+         var isBinary;
          
          // Check to see if the incoming data is a blob
-         if (data instanceof Blob) {
-         var that=this;
+         if (data instanceof File || (supportsBinary && data instanceof Blob)) {
          var fileReader = new FileReader();
          fileReader.onload = function() {
          // Call this method again, with the arraybuffer as argument
          FileWriter.prototype.write.call(that, this.result);
          };
+         if (supportsBinary) {
          fileReader.readAsArrayBuffer(data);
+         } else {
+         fileReader.readAsText(data);
+         }
          return;
          }
          
          // Mark data type for safer transport over the binary bridge
-         isBinary = (data instanceof ArrayBuffer);
-         }
+         isBinary = supportsBinary && (data instanceof ArrayBuffer);
          
          // Throw an exception if we are already writing a file
          if (this.readyState === FileWriter.WRITING) {
@@ -3618,6 +3695,7 @@ window.monaca.cloud = window.monaca.cloud || {};
          var exec = require('cordova/exec');
          var channel = require('cordova/channel');
          var modulemapper = require('cordova/modulemapper');
+         var urlutil = require('cordova/urlutil');
          
          function InAppBrowser() {
          this.channels = {
@@ -3626,6 +3704,7 @@ window.monaca.cloud = window.monaca.cloud || {};
          'loaderror' : channel.create('loaderror'),
          'exit' : channel.create('exit')
          };
+         this._alive = true;
          }
          
          InAppBrowser.prototype = {
@@ -3635,7 +3714,10 @@ window.monaca.cloud = window.monaca.cloud || {};
          }
          },
          close: function (eventname) {
+         if (this._alive) {
+         this._alive = false;
          exec(null, null, "InAppBrowser", "close", []);
+         }
          },
          show: function (eventname) {
          exec(null, null, "InAppBrowser", "show", []);
@@ -3673,16 +3755,17 @@ window.monaca.cloud = window.monaca.cloud || {};
          };
          
          module.exports = function(strUrl, strWindowName, strWindowFeatures) {
-         var iab = new InAppBrowser();
-         var cb = function(eventname) {
-         iab._eventHandler(eventname);
-         };
-         
          // Don't catch calls that write to existing frames (e.g. named iframes).
          if (window.frames && window.frames[strWindowName]) {
          var origOpenFunc = modulemapper.getOriginalSymbol(window, 'open');
          return origOpenFunc.apply(window, arguments);
          }
+         
+         strUrl = urlutil.makeAbsolute(strUrl);
+         var iab = new InAppBrowser();
+         var cb = function(eventname) {
+         iab._eventHandler(eventname);
+         };
          
          exec(cb, cb, "InAppBrowser", "open", [strUrl, strWindowName, strWindowFeatures]);
          return iab;
@@ -6406,6 +6489,127 @@ window.monaca.cloud = window.monaca.cloud || {};
          
          });
   
+  // file: lib/common/pluginloader.js
+  define("cordova/pluginloader", function(require, exports, module) {
+         
+         var channel = require('cordova/channel');
+         var modulemapper = require('cordova/modulemapper');
+         
+         // Helper function to inject a <script> tag.
+         function injectScript(url, onload, onerror) {
+         var script = document.createElement("script");
+         // onload fires even when script fails loads with an error.
+         script.onload = onload;
+         script.onerror = onerror || onload;
+         script.src = url;
+         document.head.appendChild(script);
+         }
+         
+         function onScriptLoadingComplete(moduleList) {
+         // Loop through all the plugins and then through their clobbers and merges.
+         for (var i = 0, module; module = moduleList[i]; i++) {
+         if (module) {
+         try {
+         if (module.clobbers && module.clobbers.length) {
+         for (var j = 0; j < module.clobbers.length; j++) {
+         modulemapper.clobbers(module.id, module.clobbers[j]);
+         }
+         }
+         
+         if (module.merges && module.merges.length) {
+         for (var k = 0; k < module.merges.length; k++) {
+         modulemapper.merges(module.id, module.merges[k]);
+         }
+         }
+         
+         // Finally, if runs is truthy we want to simply require() the module.
+         // This can be skipped if it had any merges or clobbers, though,
+         // since the mapper will already have required the module.
+         if (module.runs && !(module.clobbers && module.clobbers.length) && !(module.merges && module.merges.length)) {
+         modulemapper.runs(module.id);
+         }
+         }
+         catch(err) {
+         // error with module, most likely clobbers, should we continue?
+         }
+         }
+         }
+         
+         finishPluginLoading();
+         }
+         
+         // Called when:
+         // * There are plugins defined and all plugins are finished loading.
+         // * There are no plugins to load.
+         function finishPluginLoading() {
+         channel.onPluginsReady.fire();
+         }
+         
+         // Handler for the cordova_plugins.js content.
+         // See plugman's plugin_loader.js for the details of this object.
+         // This function is only called if the really is a plugins array that isn't empty.
+         // Otherwise the onerror response handler will just call finishPluginLoading().
+         function handlePluginsObject(path, moduleList) {
+         // Now inject the scripts.
+         var scriptCounter = moduleList.length;
+         
+         if (!scriptCounter) {
+         finishPluginLoading();
+         return;
+         }
+         function scriptLoadedCallback() {
+         if (!--scriptCounter) {
+         onScriptLoadingComplete(moduleList);
+         }
+         }
+         
+         for (var i = 0; i < moduleList.length; i++) {
+         injectScript(path + moduleList[i].file, scriptLoadedCallback);
+         }
+         }
+         
+         function injectPluginScript(pathPrefix) {
+         injectScript(pathPrefix + 'cordova_plugins.js', function(){
+                      try {
+                      var moduleList = require("cordova/plugin_list");
+                      handlePluginsObject(pathPrefix, moduleList);
+                      } catch (e) {
+                      // Error loading cordova_plugins.js, file not found or something
+                      // this is an acceptable error, pre-3.0.0, so we just move on.
+                      finishPluginLoading();
+                      }
+                      },finishPluginLoading); // also, add script load error handler for file not found
+         }
+         
+         function findCordovaPath() {
+         var path = null;
+         var scripts = document.getElementsByTagName('script');
+         var term = 'cordova.js';
+         for (var n = scripts.length-1; n>-1; n--) {
+         var src = scripts[n].src;
+         if (src.indexOf(term) == (src.length - term.length)) {
+         path = src.substring(0, src.length - term.length);
+         break;
+         }
+         }
+         return path;
+         }
+         
+         // Tries to load all plugins' js-modules.
+         // This is an async process, but onDeviceReady is blocked on onPluginsReady.
+         // onPluginsReady is fired when there are no plugins to load, or they are all done.
+         exports.load = function() {
+         var pathPrefix = findCordovaPath();
+         if (pathPrefix === null) {
+         console.log('Could not find cordova.js script tag. Plugin loading may fail.');
+         pathPrefix = '';
+         }
+         injectPluginScript(pathPrefix);
+         };
+         
+         
+         });
+  
   // file: lib/common/symbols.js
   define("cordova/symbols", function(require, exports, module) {
          
@@ -6416,6 +6620,23 @@ window.monaca.cloud = window.monaca.cloud || {};
          modulemapper.merges('cordova', 'cordova');
          modulemapper.clobbers('cordova/exec', 'cordova.exec');
          modulemapper.clobbers('cordova/exec', 'Cordova.exec');
+         
+         });
+  
+  // file: lib/common/urlutil.js
+  define("cordova/urlutil", function(require, exports, module) {
+         
+         var urlutil = exports;
+         var anchorEl = document.createElement('a');
+         
+/**
+ * For already absolute URLs, returns what is passed in.
+ * For relative URLs, converts them to absolute ones.
+ */
+         urlutil.makeAbsolute = function(url) {
+         anchorEl.href = url;
+         return anchorEl.href;
+         };
          
          });
   
@@ -6599,6 +6820,8 @@ window.monaca.cloud = window.monaca.cloud || {};
    context._cordovaJsLoaded = true;
    
    var channel = require('cordova/channel');
+   var pluginloader = require('cordova/pluginloader');
+   
    var platformInitChannelsArray = [channel.onNativeReady, channel.onPluginsReady];
    
    function logUnfiredChannels(arr) {
@@ -6667,173 +6890,18 @@ window.monaca.cloud = window.monaca.cloud || {};
                 
                 }, platformInitChannelsArray);
    
+   // Don't attempt to load when running unit tests.
+   if (typeof XMLHttpRequest != 'undefined') {
+   pluginloader.load();
+   }
    }(window));
   
   // file: lib/scripts/bootstrap-ios.js
   
   require('cordova/channel').onNativeReady.fire();
   
-  // file: lib/scripts/plugin_loader.js
-  
-  // Tries to load all plugins' js-modules.
-  // This is an async process, but onDeviceReady is blocked on onPluginsReady.
-  // onPluginsReady is fired when there are no plugins to load, or they are all done.
-  (function (context) {
-   // To be populated with the handler by handlePluginsObject.
-   var onScriptLoadingComplete;
-   
-   var scriptCounter = 0;
-   function scriptLoadedCallback() {
-   scriptCounter--;
-   if (scriptCounter === 0) {
-   onScriptLoadingComplete && onScriptLoadingComplete();
-   }
-   }
-   
-   function scriptErrorCallback(err) {
-   // Open Question: If a script path specified in cordova_plugins.js does not exist, do we fail for all?
-   // this is currently just continuing.
-   scriptCounter--;
-   if (scriptCounter === 0) {
-   onScriptLoadingComplete && onScriptLoadingComplete();
-   }
-   }
-   
-   // Helper function to inject a <script> tag.
-   function injectScript(path) {
-   scriptCounter++;
-   var script = document.createElement("script");
-   script.onload = scriptLoadedCallback;
-   script.onerror = scriptErrorCallback;
-   script.src = path;
-   document.head.appendChild(script);
-   }
-   
-   // Called when:
-   // * There are plugins defined and all plugins are finished loading.
-   // * There are no plugins to load.
-   function finishPluginLoading() {
-   context.cordova.require('cordova/channel').onPluginsReady.fire();
-   }
-   
-   // Handler for the cordova_plugins.js content.
-   // See plugman's plugin_loader.js for the details of this object.
-   // This function is only called if the really is a plugins array that isn't empty.
-   // Otherwise the onerror response handler will just call finishPluginLoading().
-   function handlePluginsObject(modules, path) {
-   // First create the callback for when all plugins are loaded.
-   var mapper = context.cordova.require('cordova/modulemapper');
-   onScriptLoadingComplete = function() {
-   // Loop through all the plugins and then through their clobbers and merges.
-   for (var i = 0; i < modules.length; i++) {
-   var module = modules[i];
-   if (module) {
-   try { 
-   if (module.clobbers && module.clobbers.length) {
-   for (var j = 0; j < module.clobbers.length; j++) {
-   mapper.clobbers(module.id, module.clobbers[j]);
-   }
-   }
-   
-   if (module.merges && module.merges.length) {
-   for (var k = 0; k < module.merges.length; k++) {
-   mapper.merges(module.id, module.merges[k]);
-   }
-   }
-   
-   // Finally, if runs is truthy we want to simply require() the module.
-   // This can be skipped if it had any merges or clobbers, though,
-   // since the mapper will already have required the module.
-   if (module.runs && !(module.clobbers && module.clobbers.length) && !(module.merges && module.merges.length)) {
-   context.cordova.require(module.id);
-   }
-   }
-   catch(err) {
-   // error with module, most likely clobbers, should we continue?
-   }
-   }
-   }
-   
-   finishPluginLoading();
-   };
-   
-   // Now inject the scripts.
-   for (var i = 0; i < modules.length; i++) {
-   injectScript(path + modules[i].file);
-   }
-   }
-   
-   // Find the root of the app
-   var path = '';
-   var scripts = document.getElementsByTagName('script');
-   var term = 'cordova.js';
-   for (var n = scripts.length-1; n>-1; n--) {
-   var src = scripts[n].src;
-   if (src.indexOf(term) == (src.length - term.length)) {
-   path = src.substring(0, src.length - term.length);
-   break;
-   }
-   }
-   
-   var plugins_json = path + 'cordova_plugins.json';
-   var plugins_js = path + 'cordova_plugins.js';
-   
-   // One some phones (Windows) this xhr.open throws an Access Denied exception
-   // So lets keep trying, but with a script tag injection technique instead of XHR
-   var injectPluginScript = function injectPluginScript() {
-   try {
-   var script = document.createElement("script");
-   script.onload = function(){
-   var list = cordova.require("cordova/plugin_list");
-   handlePluginsObject(list,path);
-   };
-   script.onerror = function() {
-   // Error loading cordova_plugins.js, file not found or something
-   // this is an acceptable error, pre-3.0.0, so we just move on.
-   finishPluginLoading();
-   };
-   script.src = plugins_js;
-   document.head.appendChild(script);
-   
-   } catch(err){
-   finishPluginLoading();
-   }
-   } 
-   
-   
-   // Try to XHR the cordova_plugins.json file asynchronously.
-   var xhr = new XMLHttpRequest();
-   xhr.onload = function() {
-   // If the response is a JSON string which composes an array, call handlePluginsObject.
-   // If the request fails, or the response is not a JSON array, just call finishPluginLoading.
-   var obj;
-   try {
-   obj = (this.status == 0 || this.status == 200) && this.responseText && JSON.parse(this.responseText);
-   } catch (err) {
-   // obj will be undefined.
-   }
-   if (Array.isArray(obj) && obj.length > 0) {
-   handlePluginsObject(obj, path);
-   } else {
-   finishPluginLoading();
-   }
-   };
-   xhr.onerror = function() {
-   // In this case, the json file was not present, but XHR was allowed, 
-   // so we should still try the script injection technique with the js file
-   // in case that is there.
-   injectPluginScript();
-   };
-   try { // we commented we were going to try, so let us actually try and catch
-   xhr.open('GET', plugins_json, true); // Async
-   xhr.send();
-   } catch(err){
-   injectPluginScript();
-   }
-   }(window));
-  
-  
-  })();/* 
+  })();
+/*
         *  monaca.viewport.js
         *
         *  Copyright (c) 2012 Asial Corporation<info@asial.co.jp>

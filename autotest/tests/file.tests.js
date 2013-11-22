@@ -3569,6 +3569,10 @@ describe('File API', function() {
                     builder.append(data)
                     blob = builder.getBlob('application/octet-stream');
                 } else {
+                    // Skip the test if we can't create a blob (e.g.: iOS 5).
+                    if (e instanceof TypeError) {
+                        return;
+                    }
                     // We have no way defined to create a Blob, so fail
                     fail();
                 }
