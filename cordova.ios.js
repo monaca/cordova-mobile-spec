@@ -5,11 +5,12 @@
  
  Following files are combined and packed in this file.
  - monaca.js/monaca.js.1.5                                 (monaca.js)
- - phonegap/cordova.js.2.9.ios                             (Adobe PhoneGap (Cordova))
+ - phonegap/cordova.js.2.9.1.ios                           (Adobe PhoneGap (Cordova))
  - monaca.js/monaca.viewport.js                            (monaca.viewport.js)
  - phonegap-plugins/childBrowser.js.254a0b5.ios            (PhoneGap ChildBrowser Plugin)
  - phonegap-plugins/datePicker.js.254a0b5.ios              (PhoneGap DatePicker Plugin)
  - phonegap-plugins/barcodeScanner.js.8fb5ee3.ios          (PhoneGap BarcodeScanner Plugin)
+ - phonegap-plugins/iOSStatusBar.js.ios                    (PhoneGap iOS Status Bar Plugin)
  
  *************************************************************************************************/
 
@@ -313,7 +314,6 @@ window.monaca.cloud = window.monaca.cloud || {};
  }
  };
  })();
-
 // Platform: ios
 // 2.9.1
 /*
@@ -6900,8 +6900,7 @@ window.monaca.cloud = window.monaca.cloud || {};
   
   require('cordova/channel').onNativeReady.fire();
   
-  })();
-/*
+  })();/* 
         *  monaca.viewport.js
         *
         *  Copyright (c) 2012 Asial Corporation<info@asial.co.jp>
@@ -7100,13 +7099,13 @@ window.monaca.cloud = window.monaca.cloud || {};
  // Show a webpage, will result in a callback to onLocationChange
  ChildBrowser.prototype.showWebPage = function(loc)
  {
- cordovaRef.exec(null, null, "ChildBrowserCommand", "showWebPage",[loc]);
+ cordovaRef.exec(null, null, "ChildBrowserCommand", "showWebPage", [loc]);
  };
  
  // close the browser, will NOT result in close callback
  ChildBrowser.prototype.close = function()
  {
- cordovaRef.exec(null, null, "ChildBrowserCommand", "close",[loc]);
+ cordovaRef.exec(null, null, "ChildBrowserCommand", "close", [loc]);
  };
  
  // Not Implemented
@@ -7138,11 +7137,12 @@ window.monaca.cloud = window.monaca.cloud || {};
  }
  
  
- })();/**
-       Cordova DatePicker Plugin
-       Copyright (c) Greg Allen 2011
-       MIT Licensed
-       **/
+ })();
+/**
+ Cordova DatePicker Plugin
+ Copyright (c) Greg Allen 2011
+ MIT Licensed
+ **/
 window.plugins = window.plugins || {}
 
 if (!window.plugins.datePicker) {
@@ -7187,7 +7187,7 @@ if (!window.plugins.datePicker) {
                 defaults[key] = options[key];
         }
         this._callback = cb;
-        Cordova.exec(null, null, "DatePicker", "show", [defaults] );
+        Cordova.exec(null, null, "DatePicker", "show", [defaults]);
     }
     
     DatePicker.prototype._dateSelected = function(date) {
@@ -7250,6 +7250,7 @@ if (!window.plugins.datePicker) {
   
   if ( null == options ) 
   options = []
+  
   return Cordova.exec(successWrapper, fail, "org.apache.cordova.barcodeScanner", "scan", options)
   }
   
@@ -7280,3 +7281,63 @@ if (!window.plugins.datePicker) {
   }
   
   })();
+/**
+ * iOS Status Bar Plugin
+ *
+ * @author Asial Corporation
+ * @date   2014/1/15
+ */
+window.StatusBar = window.StatusBar || {};
+
+(function() {
+ 
+ /*
+  hideStatusBar
+  support : iOS6,iOS7
+  */
+ StatusBar.hideStatusBar = function() {
+ monaca.apiQueue.exec(null, null, "mobi.monaca.nativecomponent", 'hideStatusBar', []);
+ }
+ 
+ /*
+  showStatusBar
+  support : iOS6,iOS7
+  */
+ StatusBar.showStatusBar = function() {
+ monaca.apiQueue.exec(null, null, "mobi.monaca.nativecomponent", 'showStatusBar', []);
+ }
+ 
+ /* 
+  statusBarStyleDefault
+  support : iOS6,iOS7
+  */
+ StatusBar.statusBarStyleDefault = function() {
+ monaca.apiQueue.exec(null, null, "mobi.monaca.nativecomponent", 'statusBarStyleDefault', []);
+ }
+ 
+ /* 
+  statusBarStyleLightContent
+  support : iOS7
+  */
+ StatusBar.statusBarStyleLightContent = function() {
+ monaca.apiQueue.exec(null, null, "mobi.monaca.nativecomponent", 'statusBarStyleLightContent', []);
+ }
+ 
+ /* 
+  statusBarStyleBlackOpaque
+  support : iOS6
+  */
+ StatusBar.statusBarStyleBlackOpaque = function() {
+ monaca.apiQueue.exec(null, null, "mobi.monaca.nativecomponent", 'statusBarStyleBlackOpaque', []);
+ }
+ 
+ /* 
+  statusBarStyleBlackTranslucent
+  support : iOS6
+  */
+ StatusBar.statusBarStyleBlackTranslucent = function() {
+ monaca.apiQueue.exec(null, null, "mobi.monaca.nativecomponent", 'statusBarStyleBlackTranslucent', []);
+ }
+ 
+ })();
+
